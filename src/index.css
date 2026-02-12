@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(220 10% 20%); /* Darker for better contrast */
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(220 10% 20%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(220 10% 20%);
+  --color-primary: hsl(210 70% 50%); /* Vibrant Blue */
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(210 20% 90%);
+  --color-secondary-foreground: hsl(210 70% 30%);
+  --color-muted: hsl(210 20% 95%);
+  --color-muted-foreground: hsl(210 10% 40%);
+  --color-accent: hsl(150 70% 40%); /* Vibrant Green */
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-destructive: hsl(0 80% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(210 20% 85%);
+  --color-input: hsl(210 20% 90%);
+  --color-ring: hsl(210 70% 50%);
+  --color-chart-1: hsl(210 70% 55%); /* Blue */
+  --color-chart-2: hsl(150 60% 45%); /* Green */
+  --color-chart-3: hsl(30 80% 60%);  /* Orange/Gold */
+  --color-chart-4: hsl(280 65% 65%); /* Purple */
+  --color-chart-5: hsl(340 75% 60%); /* Pink */
+  --color-sidebar-background: hsl(210 20% 98%);
+  --color-sidebar-foreground: hsl(220 10% 25%);
+  --color-sidebar-primary: hsl(210 70% 45%);
+  --color-sidebar-primary-foreground: hsl(0 0% 100%);
+  --color-sidebar-accent: hsl(210 20% 90%);
+  --color-sidebar-accent-foreground: hsl(210 70% 30%);
+  --color-sidebar-border: hsl(210 20% 88%);
+  --color-sidebar-ring: hsl(210 70% 50%);
+  --radius: 0.625rem;
+}
+
+.dark {
+  --color-background: hsl(220 10% 10%); /* Darker background for contrast */
+  --color-foreground: hsl(210 20% 95%);
+  --color-card: hsl(220 10% 15%);
+  --color-card-foreground: hsl(210 20% 95%);
+  --color-popover: hsl(220 10% 15%);
+  --color-popover-foreground: hsl(210 20% 95%);
+  --color-primary: hsl(210 70% 60%); /* Brighter Blue */
+  --color-primary-foreground: hsl(220 10% 10%);
+  --color-secondary: hsl(210 10% 25%);
+  --color-secondary-foreground: hsl(210 20% 95%);
+  --color-muted: hsl(210 10% 20%);
+  --color-muted-foreground: hsl(210 10% 60%);
+  --color-accent: hsl(150 70% 50%); /* Brighter Green */
+  --color-accent-foreground: hsl(220 10% 10%);
+  --color-destructive: hsl(0 70% 50%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(210 10% 25%);
+  --color-input: hsl(210 10% 25%);
+  --color-ring: hsl(210 70% 60%);
+  --color-chart-1: hsl(210 70% 65%);
+  --color-chart-2: hsl(150 60% 55%);
+  --color-chart-3: hsl(30 80% 70%);
+  --color-chart-4: hsl(280 65% 75%);
+  --color-chart-5: hsl(340 75% 70%);
+  --color-sidebar-background: hsl(220 10% 15%);
+  --color-sidebar-foreground: hsl(210 20% 90%);
+  --color-sidebar-primary: hsl(210 70% 55%);
+  --color-sidebar-primary-foreground: hsl(0 0% 100%);
+  --color-sidebar-accent: hsl(210 10% 20%);
+  --color-sidebar-accent-foreground: hsl(210 20% 90%);
+  --color-sidebar-border: hsl(210 10% 25%);
+  --color-sidebar-ring: hsl(210 70% 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+}
