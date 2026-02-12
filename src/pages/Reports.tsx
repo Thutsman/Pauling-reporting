@@ -98,16 +98,16 @@ export function Reports() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-w-0 space-y-6">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Reports</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">Reports</h2>
           <p className="text-muted-foreground">
             Export financial data to Excel or PDF
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Select value={year.toString()} onValueChange={(v) => setYear(parseInt(v, 10))}>
+<div className="flex flex-wrap items-center gap-2">
+            <Select value={year.toString()} onValueChange={(v) => setYear(parseInt(v, 10))}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>

@@ -56,7 +56,7 @@ const cardConfig = [
 export function SummaryCards({ summary, loading }: SummaryCardsProps) {
   if (loading) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {cardConfig.map((c) => (
           <Card key={c.key}>
             <CardHeader className="pb-2">
@@ -73,7 +73,7 @@ export function SummaryCards({ summary, loading }: SummaryCardsProps) {
 
   if (!summary) {
     return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         {cardConfig.map((c) => (
           <Card key={c.key}>
             <CardHeader className="pb-2">
@@ -89,7 +89,7 @@ export function SummaryCards({ summary, loading }: SummaryCardsProps) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <div className="grid min-w-0 grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {cardConfig.map((c) => {
         let value: number
         try {
@@ -101,10 +101,10 @@ export function SummaryCards({ summary, loading }: SummaryCardsProps) {
         return (
           <Card key={c.key}>
             <CardHeader className="pb-2">
-              <p className="text-sm font-medium text-muted-foreground">{c.label}</p>
+              <p className="truncate text-sm font-medium text-muted-foreground">{c.label}</p>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">
+              <p className="truncate text-xl font-bold sm:text-2xl">
                 {isValid ? c.format(value) : '—'}
               </p>
             </CardContent>

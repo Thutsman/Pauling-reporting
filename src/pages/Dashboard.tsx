@@ -38,10 +38,10 @@ export function Dashboard() {
     useComparisons(fiscalYear)
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-w-0 space-y-6">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Dashboard</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">Dashboard</h2>
           <p className="text-muted-foreground">
             Financial overview and analytics
           </p>

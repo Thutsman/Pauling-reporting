@@ -151,7 +151,7 @@ export function MonthlyEntry() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Monthly Entry</h2>
+        <h2 className="text-xl font-bold sm:text-2xl">Monthly Entry</h2>
         <p className="text-muted-foreground">
           Enter monthly expenses and CAPEX for the selected month.
         </p>
@@ -162,8 +162,8 @@ export function MonthlyEntry() {
           <CardTitle>Select Month</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
-            <div className="w-40">
+          <div className="flex flex-wrap gap-3 sm:gap-4">
+            <div className="min-w-0 flex-1 sm:w-40">
               <Select value={month.toString()} onValueChange={(v) => setMonth(parseInt(v, 10))}>
                 <SelectTrigger>
                   <SelectValue />
@@ -177,7 +177,7 @@ export function MonthlyEntry() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-40">
+            <div className="min-w-0 flex-1 sm:w-40">
               <Select value={year.toString()} onValueChange={(v) => setYear(parseInt(v, 10))}>
                 <SelectTrigger>
                   <SelectValue />

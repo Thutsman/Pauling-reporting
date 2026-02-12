@@ -300,11 +300,14 @@ BEGIN
     v_prev_year := p_year;
   END IF;
 
-  SELECT COALESCE(total_free_cash, 0)
-  INTO v_prev_free_cash
-  FROM monthly_summary
-  WHERE month = v_prev_month AND year = v_prev_year
-  LIMIT 1;
+  -- Use subquery with COALESCE to handle missing previous month
+  v_prev_free_cash := COALESCE(
+    (SELECT total_free_cash
+     FROM monthly_summary
+     WHERE month = v_prev_month AND year = v_prev_year
+     LIMIT 1),
+    0
+  );
 
   v_total_free_cash := v_prev_free_cash + v_net_profit - v_total_capex;
 

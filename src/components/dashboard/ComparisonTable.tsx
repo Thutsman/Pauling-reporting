@@ -96,15 +96,15 @@ export function ComparisonTable({
   }
 
   return (
-    <div className="rounded-lg border bg-card p-4">
+    <div className="min-w-0 overflow-hidden rounded-lg border bg-card p-4">
       <h3 className="mb-4 font-semibold">Comparisons</h3>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="wow">WoW</TabsTrigger>
-          <TabsTrigger value="mom">MoM</TabsTrigger>
-          <TabsTrigger value="qoq">QoQ</TabsTrigger>
+        <TabsList className="w-full sm:w-auto">
+          <TabsTrigger value="wow" className="flex-1 sm:flex-none">WoW</TabsTrigger>
+          <TabsTrigger value="mom" className="flex-1 sm:flex-none">MoM</TabsTrigger>
+          <TabsTrigger value="qoq" className="flex-1 sm:flex-none">QoQ</TabsTrigger>
         </TabsList>
-        <TabsContent value="wow" className="mt-4">
+        <TabsContent value="wow" className="mt-4 overflow-x-auto">
           {!weekComparison ? (
             <p className="text-muted-foreground">No week-over-week data</p>
           ) : (
@@ -145,7 +145,7 @@ export function ComparisonTable({
             </Table>
           )}
         </TabsContent>
-        <TabsContent value="mom" className="mt-4">
+        <TabsContent value="mom" className="mt-4 overflow-x-auto">
           {!monthComparison ? (
             <p className="text-muted-foreground">No month-over-month data</p>
           ) : (
@@ -180,7 +180,7 @@ export function ComparisonTable({
             </Table>
           )}
         </TabsContent>
-        <TabsContent value="qoq" className="mt-4">
+        <TabsContent value="qoq" className="mt-4 overflow-x-auto">
           {!quarterComparison ? (
             <p className="text-muted-foreground">No quarter-over-quarter data</p>
           ) : (

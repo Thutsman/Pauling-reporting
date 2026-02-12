@@ -30,8 +30,27 @@ export function AppLayout() {
     setOpen(false)
   }
 
+  const mobileMenuButton = (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon" className="shrink-0">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 p-0 sm:max-w-[85vw]" aria-describedby={undefined}>
+        <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+        <div className="flex h-14 items-center border-b px-6">
+          <span className="font-semibold">Pauling Reporting</span>
+        </div>
+        <div className="p-4">
+          <Sidebar onNavigate={handleSheetNavigate} />
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full min-w-0">
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r bg-sidebar-background md:block">
         <div className="flex h-14 items-center border-b px-6">
@@ -42,29 +61,9 @@ export function AppLayout() {
         </div>
       </aside>
 
-      {/* Mobile sidebar (Sheet) */}
-      <div className="fixed left-4 top-4 z-50 md:hidden">
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0" aria-describedby={undefined}>
-            <SheetTitle className="sr-only">Navigation menu</SheetTitle>
-            <div className="flex h-14 items-center border-b px-6">
-              <span className="font-semibold">Pauling Reporting</span>
-            </div>
-            <div className="p-4">
-              <Sidebar onNavigate={handleSheetNavigate} />
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      <div className="flex flex-1 flex-col">
-        <Header title={title} />
-        <main className="flex-1 overflow-auto p-4 md:p-6">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Header title={title} mobileMenu={mobileMenuButton} />
+        <main className="min-w-0 flex-1 overflow-auto p-4 md:p-6">
           <Outlet />
         </main>
       </div>

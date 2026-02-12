@@ -94,9 +94,9 @@ export function WeeklyEntry() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-xl font-bold sm:text-2xl">
           {id ? 'Edit Weekly Entry' : 'New Weekly Entry'}
         </h2>
         <p className="text-muted-foreground">
