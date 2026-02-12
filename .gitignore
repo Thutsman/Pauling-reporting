@@ -25,3 +25,7 @@ dist-ssr
 
 # Windows reserved name (accidental file)
 nul
+
+# Excel data files (confidential)
+*.xlsx
+*.xls
