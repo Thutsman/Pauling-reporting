@@ -142,6 +142,8 @@ export function MonthlyEntry() {
           wood_furniture_replacements: capexData.wood_furniture_replacements.toString(),
           legal_retainer: capexData.legal_retainer.toString(),
           licensing: capexData.licensing.toString(),
+          curtains: capexData.curtains.toString(),
+          bathroom_stalls: capexData.bathroom_stalls.toString(),
         },
       }
     : undefined
