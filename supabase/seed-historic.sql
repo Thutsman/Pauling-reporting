@@ -113,7 +113,15 @@ INSERT INTO monthly_entries (
 (11, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 7500, 7000, 1554.29, 1030, 0, 455, 1350, 0, 0, 347.09, 205.84, 350.37, 398.55, 0, 303.2),
 (12, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 7500, 7100, 1200, 1530, 1000, 1214, 0, 0, 504.93, 452.22, 44.95, 31, 158.8, 10, 914.3),
 (1, 2026, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 7500, 7100, 1171.2, 1493.28, 223, 1184.86, 2500, 3900, 482.6, 229, 337.2, 0, 27.3, 180, 791.6)
-ON CONFLICT (year, month) DO NOTHING;
+ON CONFLICT (year, month) DO UPDATE SET
+  wages_cafe = EXCLUDED.wages_cafe, wages_hotel = EXCLUDED.wages_hotel,
+  gas = EXCLUDED.gas, fuel_vehicles_generator = EXCLUDED.fuel_vehicles_generator,
+  council_rates_water = EXCLUDED.council_rates_water, electricity_zesa = EXCLUDED.electricity_zesa,
+  payee = EXCLUDED.payee, vat_zimra = EXCLUDED.vat_zimra,
+  packaging = EXCLUDED.packaging, detergents_cleaning = EXCLUDED.detergents_cleaning,
+  stationery = EXCLUDED.stationery, marketing = EXCLUDED.marketing,
+  staff_expenses = EXCLUDED.staff_expenses, vehicle_maintenance = EXCLUDED.vehicle_maintenance,
+  sundry_expenses = EXCLUDED.sundry_expenses;
 
 -- ============================================================================
 -- CAPEX ENTRIES (from Excel)

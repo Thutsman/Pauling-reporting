@@ -37,8 +37,30 @@ interface COGSAnalysisProps {
 
 export function COGSAnalysis({ pieData, trendData, loading }: COGSAnalysisProps) {
   const pieChartData = useMemo(() => {
-    return pieData
-      .filter((d) => d.amount > 0)
+    const filtered = pieData.filter((d) => d.amount > 0)
+    const total = filtered.reduce((s, d) => s + d.amount, 0)
+    const THRESHOLD = 5 // group categories below 5% into "Other"
+
+    const major: typeof filtered = []
+    let otherAmount = 0
+    let otherPercentage = 0
+
+    for (const d of filtered) {
+      const pct = total > 0 ? (d.amount / total) * 100 : 0
+      if (pct >= THRESHOLD) {
+        major.push(d)
+      } else {
+        otherAmount += d.amount
+        otherPercentage += d.percentage
+      }
+    }
+
+    if (otherAmount > 0) {
+      major.push({ category: 'Other', amount: otherAmount, percentage: otherPercentage })
+    }
+
+    return major
+      .sort((a, b) => b.amount - a.amount)
       .map((d, i) => ({
         ...d,
         fill: COLORS[i % COLORS.length],
@@ -65,7 +87,7 @@ export function COGSAnalysis({ pieData, trendData, loading }: COGSAnalysisProps)
             No COGS data
           </div>
         ) : (
-          <div className="h-64">
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -73,7 +95,7 @@ export function COGSAnalysis({ pieData, trendData, loading }: COGSAnalysisProps)
                   dataKey="amount"
                   nameKey="category"
                   cx="50%"
-                  cy="50%"
+                  cy="42%"
                   outerRadius={80}
                   label={false}
                 >
@@ -81,8 +103,18 @@ export function COGSAnalysis({ pieData, trendData, loading }: COGSAnalysisProps)
                     <Cell key={i} fill={pieChartData[i].fill} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v: number | undefined) => v != null ? formatCurrency(v) : ''} />
-                <Legend />
+                <Tooltip
+                  formatter={(v: number | undefined, _name: string | undefined, entry: { payload?: { percentage?: number } }) => {
+                    const pct = entry.payload?.percentage
+                    return v != null ? `${formatCurrency(v)}${pct != null ? ` (${pct.toFixed(1)}%)` : ''}` : ''
+                  }}
+                />
+                <Legend
+                  layout="horizontal"
+                  align="center"
+                  verticalAlign="bottom"
+                  wrapperStyle={{ fontSize: '11px', lineHeight: '18px', paddingTop: '8px' }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
