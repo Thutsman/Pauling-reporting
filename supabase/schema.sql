@@ -169,6 +169,8 @@ CREATE TABLE capex_entries (
   wood_furniture_replacements NUMERIC(12,2) NOT NULL DEFAULT 0,
   legal_retainer NUMERIC(12,2) NOT NULL DEFAULT 0,
   licensing NUMERIC(12,2) NOT NULL DEFAULT 0,
+  curtains NUMERIC(12,2) NOT NULL DEFAULT 0,
+  bathroom_stalls NUMERIC(12,2) NOT NULL DEFAULT 0,
 
   -- Generated column
   total_capex NUMERIC(12,2) GENERATED ALWAYS AS (
@@ -176,7 +178,8 @@ CREATE TABLE capex_entries (
     airconditioning + art_soft_furnishings + landscaping_plants +
     training_consulting + cold_chain_facilities + refrigerators +
     building_improvements + outstanding_creditors + st_faiths +
-    wood_furniture_replacements + legal_retainer + licensing
+    wood_furniture_replacements + legal_retainer + licensing +
+    curtains + bathroom_stalls
   ) STORED,
 
   CONSTRAINT unique_capex_month UNIQUE (year, month)

@@ -23,6 +23,8 @@ const CAPEX_AMOUNT_KEYS = [
   'wood_furniture_replacements',
   'legal_retainer',
   'licensing',
+  'curtains',
+  'bathroom_stalls',
 ] as const
 
 export function CapexTracker() {

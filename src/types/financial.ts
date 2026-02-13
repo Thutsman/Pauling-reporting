@@ -135,6 +135,8 @@ export interface CapexEntry {
   wood_furniture_replacements: number;
   legal_retainer: number;
   licensing: number;
+  curtains: number;
+  bathroom_stalls: number;
 
   total_capex: number;
 }
@@ -157,6 +159,8 @@ export interface CapexEntryInput {
   wood_furniture_replacements: number;
   legal_retainer: number;
   licensing: number;
+  curtains: number;
+  bathroom_stalls: number;
 }
 
 // ============================================================================
@@ -380,6 +384,8 @@ export interface CapexFormState {
     wood_furniture_replacements: string;
     legal_retainer: string;
     licensing: string;
+    curtains: string;
+    bathroom_stalls: string;
   };
 }
 
@@ -474,6 +480,8 @@ export const CAPEX_FIELDS = {
   wood_furniture_replacements: { label: 'Wood and Furniture Replacements', category: 'Furniture' },
   legal_retainer: { label: 'Legal Retainer', category: 'Services' },
   licensing: { label: 'Licensing', category: 'Services' },
+  curtains: { label: 'Curtains', category: 'Decor' },
+  bathroom_stalls: { label: 'Bathroom Stalls', category: 'Construction' },
 } as const;
 
 // ============================================================================

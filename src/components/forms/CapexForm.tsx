@@ -22,6 +22,8 @@ const CAPEX_KEYS: (keyof CapexFormState['items'])[] = [
   'wood_furniture_replacements',
   'legal_retainer',
   'licensing',
+  'curtains',
+  'bathroom_stalls',
 ]
 
 const initialItems: CapexFormState['items'] = {
@@ -40,6 +42,8 @@ const initialItems: CapexFormState['items'] = {
   wood_furniture_replacements: '',
   legal_retainer: '',
   licensing: '',
+  curtains: '',
+  bathroom_stalls: '',
 }
 
 interface CapexFormProps {
@@ -85,6 +89,8 @@ export function CapexForm({
     wood_furniture_replacements: parseCurrencyInput(form.items.wood_furniture_replacements),
     legal_retainer: parseCurrencyInput(form.items.legal_retainer),
     licensing: parseCurrencyInput(form.items.licensing),
+    curtains: parseCurrencyInput(form.items.curtains),
+    bathroom_stalls: parseCurrencyInput(form.items.bathroom_stalls),
   })
 
   const handleSubmit = async () => {

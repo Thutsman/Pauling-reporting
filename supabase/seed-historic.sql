@@ -128,22 +128,40 @@ ON CONFLICT (year, month) DO UPDATE SET
 -- ============================================================================
 INSERT INTO capex_entries (
   month, year, created_by, icombi_ovens, seating_area_expansion, aluminium_patio_seating, airconditioning, art_soft_furnishings, landscaping_plants,
-  training_consulting, cold_chain_facilities, refrigerators, building_improvements, outstanding_creditors, st_faiths, wood_furniture_replacements, legal_retainer, licensing
+  training_consulting, cold_chain_facilities, refrigerators, building_improvements, outstanding_creditors, st_faiths, wood_furniture_replacements, legal_retainer, licensing,
+  curtains, bathroom_stalls
 ) VALUES
-(1, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 3800, 5700, 3000, 0, 0, 0, 0, 0, 0, 0),
-(2, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 5600, 0, 4900, 0, 0, 3600, 9800, 1300, 0, 0, 0, 0, 0, 0),
-(3, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 3200, 13800, 0, 0, 1500, 0, 0, 0, 3900, 0, 0, 0, 0, 0),
-(4, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 3800, 0, 5300, 0, 0, 0, 800, 800, 5700, 0, 0, 0, 3980),
-(5, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(6, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7800, 0, 0, 0),
-(7, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 0, 0, 0),
-(8, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 1200, 0, 0, 0),
-(9, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 3500, 5000, 0),
-(10, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 1200, 0),
-(11, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 900, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 620, 1200, 800),
-(12, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 42000, 1800, 0, 0, 0, 350, 0, 0, 0, 2800, 0, 0, 0, 3000, 0),
-(1, 2026, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-ON CONFLICT (year, month) DO NOTHING;
+(1, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 3800, 5700, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 5600, 0, 4900, 0, 0, 3600, 9800, 1300, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 3200, 13800, 0, 0, 1500, 0, 0, 0, 3900, 0, 0, 0, 0, 0, 0, 0),
+(4, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 3800, 0, 5300, 0, 0, 0, 800, 800, 5700, 0, 0, 0, 3980, 0, 0),
+(5, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7800, 0, 0, 0, 0, 0),
+(7, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 0, 0, 0, 0, 0),
+(8, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 1000, 0, 0, 0, 0, 0, 1200, 0, 0, 0, 0, 0),
+(9, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1200, 3500, 5000, 0, 0, 0),
+(10, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 0, 1200, 0, 0, 6800),
+(11, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 900, 0, 0, 0, 0, 1500, 0, 0, 0, 0, 0, 620, 1200, 800, 3200, 0),
+(12, 2025, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 42000, 1800, 0, 0, 0, 350, 0, 0, 0, 2800, 0, 0, 0, 3000, 0, 0, 0),
+(1, 2026, 'f12e7e02-d383-4e93-b779-9bd2924cd53e', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+ON CONFLICT (year, month) DO UPDATE SET
+  icombi_ovens = EXCLUDED.icombi_ovens,
+  seating_area_expansion = EXCLUDED.seating_area_expansion,
+  aluminium_patio_seating = EXCLUDED.aluminium_patio_seating,
+  airconditioning = EXCLUDED.airconditioning,
+  art_soft_furnishings = EXCLUDED.art_soft_furnishings,
+  landscaping_plants = EXCLUDED.landscaping_plants,
+  training_consulting = EXCLUDED.training_consulting,
+  cold_chain_facilities = EXCLUDED.cold_chain_facilities,
+  refrigerators = EXCLUDED.refrigerators,
+  building_improvements = EXCLUDED.building_improvements,
+  outstanding_creditors = EXCLUDED.outstanding_creditors,
+  st_faiths = EXCLUDED.st_faiths,
+  wood_furniture_replacements = EXCLUDED.wood_furniture_replacements,
+  legal_retainer = EXCLUDED.legal_retainer,
+  licensing = EXCLUDED.licensing,
+  curtains = EXCLUDED.curtains,
+  bathroom_stalls = EXCLUDED.bathroom_stalls;
 
 -- ============================================================================
 -- RECOMPUTE MONTHLY SUMMARY
