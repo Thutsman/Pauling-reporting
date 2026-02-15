@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { getISOWeek } from 'date-fns'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import type { WeeklyEntry, WeeklyEntryInput } from '@/types/financial'
@@ -62,18 +63,22 @@ export function useWeeklyData() {
   const create = useCallback(
     async (input: WeeklyEntryInput, status: 'draft' | 'submitted' = 'draft') => {
       if (!userId) throw new Error('Not authenticated')
+      const endDate = new Date(input.week_end_date)
+      const year = endDate.getFullYear()
+      const week_number = getISOWeek(endDate)
       const { data, error: err } = await supabase
         .from('weekly_entries')
         .insert({
           ...input,
+          year,
+          week_number,
           created_by: userId,
           status,
         })
         .select('*')
         .single()
       if (err) throw err
-      const month = new Date(input.week_start_date).getMonth() + 1
-      const year = new Date(input.week_start_date).getFullYear()
+      const month = endDate.getMonth() + 1
       await recomputeSummary(month, year)
       return (data as WeeklyEntry)
     },
@@ -85,6 +90,11 @@ export function useWeeklyData() {
       if (!userId) throw new Error('Not authenticated')
       const payload: Record<string, unknown> = { ...input }
       if (status !== undefined) payload.status = status
+      if (input.week_end_date) {
+        const endDate = new Date(input.week_end_date)
+        payload.year = endDate.getFullYear()
+        payload.week_number = getISOWeek(endDate)
+      }
       const { data, error: err } = await supabase
         .from('weekly_entries')
         .update(payload)
@@ -94,9 +104,8 @@ export function useWeeklyData() {
         .single()
       if (err) throw err
       const entry = data as WeeklyEntry
-      const month = new Date(entry.week_start_date).getMonth() + 1
-      const year = entry.year
-      await recomputeSummary(month, year)
+      const month = new Date(entry.week_end_date).getMonth() + 1
+      await recomputeSummary(month, entry.year)
       return entry
     },
     [userId, recomputeSummary]
