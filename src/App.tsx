@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Login } from '@/pages/Login'
@@ -7,6 +8,12 @@ import { Dashboard } from '@/pages/Dashboard'
 import { WeeklyEntry } from '@/pages/WeeklyEntry'
 import { MonthlyEntry } from '@/pages/MonthlyEntry'
 import { Reports } from '@/pages/Reports'
+
+function DefaultRedirect() {
+  const role = useAuthStore((s) => s.role)
+  const defaultPath = role === 'branch_manager' ? '/weekly-entry' : '/dashboard'
+  return <Navigate to={defaultPath} replace />
+}
 
 function AppRoutes() {
   return (
@@ -25,7 +32,7 @@ function AppRoutes() {
           </Route>
         </Route>
       </Route>
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<DefaultRedirect />} />
     </Routes>
   )
 }

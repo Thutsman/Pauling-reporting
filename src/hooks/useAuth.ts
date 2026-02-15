@@ -18,40 +18,37 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true
+    let initialized = false
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!mounted) return
-      if (session?.user) {
-        setUser(session.user)
-        const role = await fetchUserRole(session.user.id)
-        setRole(role)
-      } else {
-        setUser(null)
-        setRole(null)
-      }
-      setLoading(false)
-    }
-
-    init()
-
+    // Use onAuthStateChange as the single source of truth.
+    // Supabase v2 fires INITIAL_SESSION immediately, so no need for getSession().
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         if (!mounted) return
         if (session?.user) {
           setUser(session.user)
           const role = await fetchUserRole(session.user.id)
+          if (!mounted) return
           setRole(role)
         } else {
           setUser(null)
           setRole(null)
         }
+        initialized = true
         setLoading(false)
       }
     )
 
+    // Safety net: if onAuthStateChange hasn't fired after 5s, stop loading
+    const timeout = setTimeout(() => {
+      if (!initialized && mounted) {
+        setLoading(false)
+      }
+    }, 5000)
+
     return () => {
       mounted = false
+      clearTimeout(timeout)
       subscription.unsubscribe()
     }
   }, [setUser, setRole, setLoading])

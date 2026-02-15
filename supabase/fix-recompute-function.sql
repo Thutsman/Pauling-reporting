@@ -20,13 +20,16 @@ DECLARE
   v_prev_month INTEGER;
   v_prev_year INTEGER;
 BEGIN
-  -- Aggregate weekly entries for this month
+  -- Aggregate weekly entries for this month.
+  -- Use week_end_date to determine which month a week belongs to,
+  -- since weeks straddling month boundaries (e.g. Dec 29 - Jan 4)
+  -- should be assigned to the month of their end date.
   SELECT
     COALESCE(SUM(total_revenue), 0),
     COALESCE(SUM(total_cogs), 0)
   INTO v_total_revenue, v_total_cogs
   FROM weekly_entries
-  WHERE EXTRACT(MONTH FROM week_start_date) = p_month
+  WHERE EXTRACT(MONTH FROM week_end_date) = p_month
     AND year = p_year;
 
   v_gross_profit := v_total_revenue - v_total_cogs;

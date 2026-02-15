@@ -23,6 +23,10 @@ export function ProtectedRoute({ requiredRole }: ProtectedRouteProps) {
   }
 
   if (requiredRole && role !== requiredRole) {
+    if (!role) {
+      // No role assigned — redirect to login to avoid infinite redirect loop
+      return <Navigate to="/login" state={{ from: location }} replace />
+    }
     const defaultPath = role === 'branch_manager' ? '/weekly-entry' : '/dashboard'
     return <Navigate to={defaultPath} replace />
   }

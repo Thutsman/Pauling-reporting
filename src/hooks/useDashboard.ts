@@ -97,7 +97,7 @@ export function useDashboard() {
   const revenueBreakdown = useMemo((): RevenueBreakdown[] => {
     return summaries.map((s) => {
       const weeks = weeklyEntries.filter(
-        (w) => w.year === s.year && new Date(w.week_start_date).getMonth() + 1 === s.month
+        (w) => w.year === s.year && new Date(w.week_end_date).getMonth() + 1 === s.month
       )
       const agg = aggregateWeeklyToMonthly(weeks)
       return {

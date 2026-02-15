@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { MonthlySummary } from '@/types/financial'
 
@@ -6,6 +6,8 @@ export function useMonthlySummary(year: number) {
   const [summaries, setSummaries] = useState<MonthlySummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const yearRef = useRef(year)
+  yearRef.current = year
 
   const fetchSummaries = useCallback(async (showLoading = true) => {
     if (showLoading) setLoading(true)
@@ -13,7 +15,7 @@ export function useMonthlySummary(year: number) {
       const { data, error: fetchError } = await supabase
         .from('monthly_summary')
         .select('*')
-        .eq('year', year)
+        .eq('year', yearRef.current)
         .order('month', { ascending: true })
       if (fetchError) {
         setError(fetchError.message)
@@ -23,15 +25,17 @@ export function useMonthlySummary(year: number) {
     } finally {
       if (showLoading) setLoading(false)
     }
-  }, [year])
+  }, [])
 
+  // Fetch data when year changes
   useEffect(() => {
     fetchSummaries(true)
-  }, [fetchSummaries])
+  }, [year, fetchSummaries])
 
+  // Realtime subscription — stable lifecycle, won't re-create on year change
   useEffect(() => {
     const channel = supabase
-      .channel('monthly_summary_changes')
+      .channel(`monthly_summary_${Date.now()}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'monthly_summary' }, () => {
         fetchSummaries(false)
       })
