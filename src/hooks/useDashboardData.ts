@@ -1,25 +1,33 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+
+// Module-level cache so data persists across route navigation
+const queryCache = new Map<string, unknown>()
 
 export function useQuery<T>(
   fetcher: () => Promise<T>,
   deps: unknown[] = []
 ): [T | null, boolean] {
-  const [data, setData] = useState<T | null>(null)
-  const [loading, setLoading] = useState(true)
-  const hasData = useRef(false)
+  const cacheKey = JSON.stringify(deps)
+  const cached = queryCache.get(cacheKey) as T | undefined
+  const [data, setData] = useState<T | null>(cached ?? null)
+  const [loading, setLoading] = useState(!cached)
 
   const fetchData = useCallback(fetcher, deps)
 
   useEffect(() => {
     let cancelled = false
-    // Only show full loading state on first fetch; subsequent fetches
-    // keep showing stale data to avoid skeleton flash on re-navigation
-    if (!hasData.current) setLoading(true)
+    const cached = queryCache.get(cacheKey)
+    if (cached) {
+      setData(cached as T)
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
     fetchData()
       .then((result) => {
         if (!cancelled) {
+          queryCache.set(cacheKey, result)
           setData(result)
-          hasData.current = true
         }
       })
       .catch(() => {
@@ -31,7 +39,7 @@ export function useQuery<T>(
     return () => {
       cancelled = true
     }
-  }, [fetchData])
+  }, [fetchData, cacheKey])
 
   return [data, loading]
 }

@@ -2,15 +2,19 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { MonthlySummary } from '@/types/financial'
 
+// Module-level cache so data persists across route navigation
+const summaryCache = new Map<number, MonthlySummary[]>()
+
 export function useMonthlySummary(year: number) {
-  const [summaries, setSummaries] = useState<MonthlySummary[]>([])
-  const [loading, setLoading] = useState(true)
+  const cached = summaryCache.get(year)
+  const [summaries, setSummaries] = useState<MonthlySummary[]>(cached ?? [])
+  const [loading, setLoading] = useState(!cached)
   const [error, setError] = useState<string | null>(null)
   const yearRef = useRef(year)
   yearRef.current = year
 
   const fetchSummaries = useCallback(async (showLoading = true) => {
-    if (showLoading) setLoading(true)
+    if (showLoading && !summaryCache.has(yearRef.current)) setLoading(true)
     try {
       const { data, error: fetchError } = await supabase
         .from('monthly_summary')
@@ -21,15 +25,25 @@ export function useMonthlySummary(year: number) {
         setError(fetchError.message)
         return
       }
-      setSummaries((data ?? []) as MonthlySummary[])
+      const result = (data ?? []) as MonthlySummary[]
+      summaryCache.set(yearRef.current, result)
+      setSummaries(result)
     } finally {
-      if (showLoading) setLoading(false)
+      setLoading(false)
     }
   }, [])
 
   // Fetch data when year changes
   useEffect(() => {
-    fetchSummaries(true)
+    // If we have cached data, show it immediately and refresh in background
+    const cached = summaryCache.get(year)
+    if (cached) {
+      setSummaries(cached)
+      setLoading(false)
+      fetchSummaries(false) // background refresh
+    } else {
+      fetchSummaries(true)
+    }
   }, [year, fetchSummaries])
 
   // Realtime subscription — stable lifecycle, won't re-create on year change

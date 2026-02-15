@@ -70,7 +70,7 @@ export function ExpensesTrend({ data, loading }: ExpensesTrendProps) {
         ))}
       </div>
       <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
           <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="month" tick={{ fontSize: 12 }} />

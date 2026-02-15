@@ -40,7 +40,7 @@ export function WaterfallChart({ data, loading }: WaterfallChartProps) {
 
   return (
     <div className="h-80 w-full">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
         <BarChart data={chartData} layout="vertical" margin={{ top: 20, right: 30, left: 80, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
           <XAxis type="number" tickFormatter={(v) => formatCurrency(v)} />

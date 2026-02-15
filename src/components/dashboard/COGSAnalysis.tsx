@@ -88,7 +88,7 @@ export function COGSAnalysis({ pieData, trendData, loading }: COGSAnalysisProps)
           </div>
         ) : (
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <PieChart>
                 <Pie
                   data={pieChartData}
@@ -128,7 +128,7 @@ export function COGSAnalysis({ pieData, trendData, loading }: COGSAnalysisProps)
           </div>
         ) : (
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
               <LineChart data={lineChartData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} />
