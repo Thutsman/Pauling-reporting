@@ -18,7 +18,7 @@ const routeTitles: Record<string, string> = {
 function getPageTitle(pathname: string): string {
   if (routeTitles[pathname]) return routeTitles[pathname]
   if (pathname.startsWith('/weekly-entry/')) return 'Edit Weekly Entry'
-  return 'Dashboard'
+  return ''
 }
 
 export function AppLayout() {

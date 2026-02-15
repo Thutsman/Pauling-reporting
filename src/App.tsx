@@ -10,7 +10,14 @@ import { MonthlyEntry } from '@/pages/MonthlyEntry'
 import { Reports } from '@/pages/Reports'
 
 function DefaultRedirect() {
-  const role = useAuthStore((s) => s.role)
+  const { role, loading } = useAuthStore()
+  if (loading || !role) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
+  }
   const defaultPath = role === 'branch_manager' ? '/weekly-entry' : '/dashboard'
   return <Navigate to={defaultPath} replace />
 }

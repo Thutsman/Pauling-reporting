@@ -22,15 +22,18 @@ export function Login() {
   const navigate = useNavigate()
   const { toast } = useToast()
   const user = useAuthStore((s) => s.user)
+  const role = useAuthStore((s) => s.role)
 
-  // Navigate once the auth store confirms the user is signed in
-  // (the onAuthStateChange callback in App sets user after signIn resolves)
+  // Navigate once BOTH user and role are resolved in the auth store.
+  // Waiting for role prevents the brief flash of the wrong view
+  // (e.g. branch_manager momentarily seeing the Dashboard header).
   useEffect(() => {
-    if (user) {
+    if (user && role) {
       toast({ title: 'Signed in successfully', variant: 'default' })
-      navigate('/dashboard', { replace: true })
+      const destination = role === 'branch_manager' ? '/weekly-entry' : '/dashboard'
+      navigate(destination, { replace: true })
     }
-  }, [user, navigate, toast])
+  }, [user, role, navigate, toast])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
