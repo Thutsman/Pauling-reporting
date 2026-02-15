@@ -13,6 +13,32 @@ async function fetchUserRole(userId: string): Promise<UserRole | null> {
   return data?.role as UserRole ?? null
 }
 
+// Standalone auth actions — safe to call from any component without creating subscriptions.
+// These run OUTSIDE the onAuthStateChange callback, so they don't deadlock with Supabase's
+// internal navigator.locks that are held during signInWithPassword.
+export async function signIn(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+  if (error) throw error
+  // Don't fetch role here — the onAuthStateChange callback handles it.
+  // Calling supabase.from() inside signIn would deadlock because
+  // signInWithPassword holds a lock that getSession() also needs.
+}
+
+export async function signUp(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({ email, password })
+  if (error) throw error
+}
+
+export async function signOut() {
+  await supabase.auth.signOut()
+  useAuthStore.getState().reset()
+}
+
+// Hook — only call this ONCE in App to manage the auth subscription.
+// Do NOT call from Login or other pages.
 export function useAuth() {
   const { setUser, setRole, setLoading } = useAuthStore()
 
@@ -20,31 +46,36 @@ export function useAuth() {
     let mounted = true
     let initialized = false
 
-    // Use onAuthStateChange as the single source of truth.
-    // Supabase v2 fires INITIAL_SESSION immediately, so no need for getSession().
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
+        // IMPORTANT: This callback must be synchronous (no await) to avoid
+        // deadlocking with Supabase's internal navigator.locks.
+        // Defer async work (fetchUserRole) outside the callback.
         if (!mounted) return
         if (session?.user) {
           setUser(session.user)
-          const role = await fetchUserRole(session.user.id)
-          if (!mounted) return
-          setRole(role)
+          // Fetch role asynchronously outside the lock context
+          fetchUserRole(session.user.id).then((role) => {
+            if (!mounted) return
+            setRole(role)
+            initialized = true
+            setLoading(false)
+          })
         } else {
           setUser(null)
           setRole(null)
+          initialized = true
+          setLoading(false)
         }
-        initialized = true
-        setLoading(false)
       }
     )
 
-    // Safety net: if onAuthStateChange hasn't fired after 5s, stop loading
+    // Safety net: if auth hasn't resolved after 3s, stop loading
     const timeout = setTimeout(() => {
       if (!initialized && mounted) {
         setLoading(false)
       }
-    }, 5000)
+    }, 3000)
 
     return () => {
       mounted = false
@@ -52,44 +83,4 @@ export function useAuth() {
       subscription.unsubscribe()
     }
   }, [setUser, setRole, setLoading])
-
-  const signIn = async (email: string, password: string) => {
-    setLoading(true)
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    if (error) {
-      setLoading(false)
-      throw error
-    }
-    if (data.user) {
-      const role = await fetchUserRole(data.user.id)
-      setUser(data.user)
-      setRole(role)
-    }
-    setLoading(false)
-  }
-
-  const signUp = async (email: string, password: string) => {
-    setLoading(true)
-    const { data, error } = await supabase.auth.signUp({ email, password })
-    if (error) {
-      setLoading(false)
-      throw error
-    }
-    if (data.user) {
-      const role = await fetchUserRole(data.user.id)
-      setUser(data.user)
-      setRole(role)
-    }
-    setLoading(false)
-  }
-
-  const signOut = async () => {
-    await supabase.auth.signOut()
-    useAuthStore.getState().reset()
-  }
-
-  return { signIn, signUp, signOut }
 }

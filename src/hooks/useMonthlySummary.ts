@@ -15,6 +15,7 @@ export function useMonthlySummary(year: number) {
 
   const fetchSummaries = useCallback(async (showLoading = true) => {
     if (showLoading && !summaryCache.has(yearRef.current)) setLoading(true)
+    setError(null)
     try {
       const { data, error: fetchError } = await supabase
         .from('monthly_summary')
@@ -46,21 +47,25 @@ export function useMonthlySummary(year: number) {
     }
   }, [year, fetchSummaries])
 
-  // Realtime subscription — stable lifecycle, won't re-create on year change
+  // Realtime subscription — delay so auth token is ready (avoids "WebSocket closed before connection" warning)
   useEffect(() => {
-    const channel = supabase
-      .channel(`monthly_summary_${Date.now()}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'monthly_summary' }, () => {
-        fetchSummaries(false)
-      })
-      .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR' && err) {
-          console.warn('[Realtime] monthly_summary subscription failed, using REST only:', err.message)
-        }
-      })
+    let channel: ReturnType<typeof supabase.channel> | null = null
+    const timer = setTimeout(() => {
+      channel = supabase
+        .channel(`monthly_summary_${Date.now()}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'monthly_summary' }, () => {
+          fetchSummaries(false)
+        })
+        .subscribe((status, err) => {
+          if (status === 'CHANNEL_ERROR' && err) {
+            console.warn('[Realtime] monthly_summary subscription failed, using REST only:', err.message)
+          }
+        })
+    }, 300)
 
     return () => {
-      supabase.removeChannel(channel)
+      clearTimeout(timer)
+      if (channel) supabase.removeChannel(channel)
     }
   }, [fetchSummaries])
 

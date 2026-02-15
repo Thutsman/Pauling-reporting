@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
+import { signIn } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,9 +19,18 @@ export function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
   const navigate = useNavigate()
   const { toast } = useToast()
+  const user = useAuthStore((s) => s.user)
+
+  // Navigate once the auth store confirms the user is signed in
+  // (the onAuthStateChange callback in App sets user after signIn resolves)
+  useEffect(() => {
+    if (user) {
+      toast({ title: 'Signed in successfully', variant: 'default' })
+      navigate('/dashboard', { replace: true })
+    }
+  }, [user, navigate, toast])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,12 +38,11 @@ export function Login() {
     setLoading(true)
     try {
       await signIn(email, password)
-      toast({ title: 'Signed in successfully', variant: 'default' })
-      navigate('/dashboard', { replace: true })
+      // Don't navigate here — the useEffect above handles it
+      // once onAuthStateChange sets the user in the store
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to sign in'
       setError(message)
-    } finally {
       setLoading(false)
     }
   }

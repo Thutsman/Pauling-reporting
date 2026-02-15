@@ -1,5 +1,6 @@
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@/hooks/useTheme'
-import { useAuth } from '@/hooks/useAuth'
+import { signOut } from '@/hooks/useAuth'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,9 +19,13 @@ interface HeaderProps {
 }
 
 export function Header({ title, mobileMenu }: HeaderProps) {
+  const navigate = useNavigate()
   const { toggleTheme, theme } = useTheme()
-  const { signOut } = useAuth()
   const user = useAuthStore((s) => s.user)
+
+  const handleSignOut = () => {
+    signOut().then(() => navigate('/login', { replace: true }))
+  }
 
   const initials = user?.email
     ?.slice(0, 2)
@@ -58,7 +63,12 @@ export function Header({ title, mobileMenu }: HeaderProps) {
             <DropdownMenuItem disabled className="max-w-full truncate font-normal">
               {user?.email}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
+            <DropdownMenuItem
+              onSelect={() => {
+                setTimeout(() => handleSignOut(), 0)
+              }}
+              className="cursor-pointer"
+            >
               <LogOut className="mr-2 h-4 w-4 shrink-0" />
               Sign out
             </DropdownMenuItem>

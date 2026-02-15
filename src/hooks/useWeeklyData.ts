@@ -31,21 +31,29 @@ export function useWeeklyData() {
   }, [fetchEntries])
 
   useEffect(() => {
-    const channel = supabase
-      .channel('weekly_entries_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'weekly_entries' }, () => {
-        fetchEntries()
-      })
-      .subscribe((status, err) => {
-        if (status === 'CHANNEL_ERROR' && err) {
-          console.warn('[Realtime] weekly_entries subscription failed, using REST only:', err.message)
-        }
-      })
+    if (!userId) return
+
+    let channel: ReturnType<typeof supabase.channel> | null = null
+
+    // Delay subscription so auth token is ready for Realtime (avoids "WebSocket closed before connection" warning)
+    const timer = setTimeout(() => {
+      channel = supabase
+        .channel('weekly_entries_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'weekly_entries' }, () => {
+          fetchEntries()
+        })
+        .subscribe((status, err) => {
+          if (status === 'CHANNEL_ERROR' && err) {
+            console.warn('[Realtime] weekly_entries subscription failed, using REST only:', err.message)
+          }
+        })
+    }, 300)
 
     return () => {
-      supabase.removeChannel(channel)
+      clearTimeout(timer)
+      if (channel) supabase.removeChannel(channel)
     }
-  }, [fetchEntries])
+  }, [userId, fetchEntries])
 
   const recomputeSummary = useCallback(async (month: number, year: number) => {
     await supabase.rpc('recompute_monthly_summary', { p_month: month, p_year: year })

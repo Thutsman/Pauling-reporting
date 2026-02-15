@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Select,
   SelectContent,
@@ -30,9 +31,11 @@ const years = Array.from({ length: 5 }, (_, i) => currentYear - i)
 
 export function Reports() {
   const [year, setYear] = useState(currentYear)
-  const { summaries, loading } = useMonthlySummary(year)
+  const { summaries, loading, error, refetch } = useMonthlySummary(year)
   const { toast } = useToast()
   const [exporting, setExporting] = useState(false)
+  const navigate = useNavigate()
+  const isAuthError = error && (error.includes('JWT') || error.includes('refresh') || error.includes('401') || error.includes('PGRST301'))
 
   const handleExportExcel = async () => {
     setExporting(true)
@@ -135,6 +138,20 @@ export function Reports() {
         <CardContent>
           {loading ? (
             <Skeleton className="h-48 w-full" />
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
+              <p className="text-muted-foreground">
+                {isAuthError
+                  ? 'Session expired. Please sign in again.'
+                  : `Failed to load data: ${error}`}
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => (isAuthError ? navigate('/login') : refetch())}
+              >
+                {isAuthError ? 'Sign in again' : 'Retry'}
+              </Button>
+            </div>
           ) : summaries.length === 0 ? (
             <p className="text-muted-foreground">No data for this year</p>
           ) : (
