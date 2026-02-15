@@ -17,7 +17,7 @@ async function fetchUserRole(userId: string): Promise<UserRole | null> {
 // These run OUTSIDE the onAuthStateChange callback, so they don't deadlock with Supabase's
 // internal navigator.locks that are held during signInWithPassword.
 export async function signIn(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
@@ -28,7 +28,7 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function signUp(email: string, password: string) {
-  const { data, error } = await supabase.auth.signUp({ email, password })
+  const { error } = await supabase.auth.signUp({ email, password })
   if (error) throw error
 }
 
