@@ -10,9 +10,9 @@ export function ProtectedRoute({ requiredRole }: ProtectedRouteProps) {
   const { user, role, loading } = useAuthStore()
   const location = useLocation()
 
-  // Show spinner while auth is resolving OR while user is set but role hasn't loaded yet.
-  // This prevents the brief flash of wrong content (e.g. branch_manager seeing Dashboard).
-  if (loading || (user && !role)) {
+  // Show spinner only while auth is still loading. If loading is done and we have user but no role
+  // (e.g. role fetch failed or timed out on iOS), redirect to login to avoid infinite spinner.
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
@@ -20,7 +20,7 @@ export function ProtectedRoute({ requiredRole }: ProtectedRouteProps) {
     )
   }
 
-  if (!user) {
+  if (!user || !role) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 

@@ -11,12 +11,15 @@ import { Reports } from '@/pages/Reports'
 
 function DefaultRedirect() {
   const { role, loading } = useAuthStore()
-  if (loading || !role) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     )
+  }
+  if (!role) {
+    return <Navigate to="/login" replace />
   }
   const defaultPath = role === 'branch_manager' ? '/weekly-entry' : '/dashboard'
   return <Navigate to={defaultPath} replace />

@@ -54,13 +54,27 @@ export function useAuth() {
         if (!mounted) return
         if (session?.user) {
           setUser(session.user)
-          // Fetch role asynchronously outside the lock context
-          fetchUserRole(session.user.id).then((role) => {
-            if (!mounted) return
-            setRole(role)
-            initialized = true
-            setLoading(false)
-          })
+          // Fetch role asynchronously outside the lock context.
+          // On iOS/Safari the request can hang or fail; always clear loading and set role (or null).
+          const rolePromise = Promise.race([
+            fetchUserRole(session.user.id),
+            new Promise<UserRole | null>((_, reject) =>
+              setTimeout(() => reject(new Error('Role fetch timeout')), 8000)
+            ),
+          ])
+          rolePromise
+            .then((role) => {
+              if (!mounted) return
+              setRole(role)
+              initialized = true
+              setLoading(false)
+            })
+            .catch(() => {
+              if (!mounted) return
+              setRole(null)
+              initialized = true
+              setLoading(false)
+            })
         } else {
           setUser(null)
           setRole(null)
